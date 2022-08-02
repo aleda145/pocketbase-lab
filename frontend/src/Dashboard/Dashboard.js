@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, NavLink } from "react-router-dom";
 
-export default function Dashboard({ client }) {
+export default function Dashboard({ client, setIsLoggedIn }) {
   const navigate = useNavigate();
 
   async function logOutClicked() {
     await client.AuthStore.clear();
-    navigate("/dashboard");
+    setIsLoggedIn(false);
+    navigate("/");
   }
   const { isLoading, error, data } = useQuery(["repoData"], () =>
     client.Records.getList("user_nums", 1, 50, {

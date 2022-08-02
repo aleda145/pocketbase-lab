@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-export default function Auth({ client }) {
+export default function Auth({ client, setIsLoggedIn }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
 
@@ -8,6 +8,7 @@ export default function Auth({ client }) {
     e.preventDefault();
     const userData = await client.Users.authViaEmail(username, password);
     console.log(userData);
+    setIsLoggedIn(client.AuthStore.isValid);
   };
   return (
     <div className="login-wrapper">
