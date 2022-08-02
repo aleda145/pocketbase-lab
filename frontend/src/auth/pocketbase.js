@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import PocketBase from "pocketbase";
-
+import PropTypes from "prop-types";
 // const client = new PocketBase("http://localhost:8090");
 
 // const userData = client.Users.authViaEmail("test@example.com", "12345678");
 // console.log(userData);
 
-export default function Auth() {
+export default function Auth({ setToken }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
 
@@ -15,6 +15,7 @@ export default function Auth() {
     e.preventDefault();
     const userData = await client.Users.authViaEmail(username, password);
     console.log(userData);
+    setToken(userData.token);
   };
   return (
     <div className="login-wrapper">
@@ -38,3 +39,7 @@ export default function Auth() {
     </div>
   );
 }
+
+Auth.propTypes = {
+  setToken: PropTypes.func.isRequired,
+};
