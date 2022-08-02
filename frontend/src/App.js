@@ -4,11 +4,16 @@ import Auth from "./auth/pocketbase";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
 import Preferences from "./Preferences/Preferences";
+import PocketBase from "pocketbase";
+
 function App() {
   const [token, setToken] = useState();
   console.log(token);
-  if (!token) {
-    return <Auth setToken={setToken} />;
+  const client = new PocketBase("http://localhost:8090");
+  console.log(client.AuthStore.isValid);
+  console.log(client.AuthStore.model.email);
+  if (!client.AuthStore.isValid) {
+    return <Auth client={client} />;
   }
   return (
     <div className="wrapper">
@@ -16,7 +21,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* <Route path="/" element={<App />} /> */}
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard client={client} />} />
           <Route path="preferences" element={<Preferences />} />
         </Routes>
       </BrowserRouter>
