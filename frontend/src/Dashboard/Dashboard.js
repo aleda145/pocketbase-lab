@@ -8,10 +8,8 @@ export default function Dashboard({ client, setIsLoggedIn }) {
 
   const addMutation = useMutation(
     (url) => {
-      // return axios.post(getApiDomain() + "/scrape", url);
-      // return "ok";
       return client.Records.create("user_nums", {
-        user: "KoDn7hCUaY8BIGG",
+        user: client.AuthStore.model.id,
         num: 42,
       });
     },
