@@ -36,4 +36,4 @@ HEALTHCHECK NONE
 #checkov:skip=CKV_DOCKER_3: Ensure that a user for the container has been created
 # Because it will run as root on the VM anyway, and there is nothing else there but a docker container
 
-CMD ["/app/run.sh"]
+ENTRYPOINT ["/app/run.sh"]
