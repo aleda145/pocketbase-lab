@@ -19,7 +19,11 @@ export default function Auth({ client, setIsLoggedIn }) {
     });
 
     console.log(user);
-    // setIsLoggedIn(client.AuthStore.isValid);
+    console.log(client.AuthStore.isValid);
+    const userData = await client.Users.authViaEmail(username, password);
+    console.log(userData);
+
+    setIsLoggedIn(client.AuthStore.isValid);
   };
   return (
     <div className="login-wrapper">
