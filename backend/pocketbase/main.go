@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	_ "github.com/aleda145/pocketbase-example/pocketbase/migrations"
+
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
