@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/labstack/echo/v5 v5.0.0-20220201181537-ed2888cfa198
-	github.com/pocketbase/pocketbase v0.3.2
+	github.com/pocketbase/pocketbase v0.3.4
 )
 
 require (
