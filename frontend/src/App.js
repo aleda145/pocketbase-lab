@@ -14,8 +14,12 @@ const queryClient = new QueryClient({
     },
   },
 });
+export function getApiDomain() {
+  return process.env.REACT_APP_API_URL;
+}
+
 function App() {
-  const client = new PocketBase("http://localhost:8090");
+  const client = new PocketBase(getApiDomain());
   const [isLoggedIn, setIsLoggedIn] = useState(client.AuthStore.isValid);
 
   console.log(client.AuthStore.isValid);
