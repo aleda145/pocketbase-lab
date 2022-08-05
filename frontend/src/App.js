@@ -20,10 +20,15 @@ export function getApiDomain() {
 
 function App() {
   const client = new PocketBase(getApiDomain());
-  const [isLoggedIn, setIsLoggedIn] = useState(client.AuthStore.isValid);
-
-  console.log(client.AuthStore.isValid);
-  console.log(client.AuthStore.model.email);
+  const [isLoggedIn, setIsLoggedIn] = useState(client.authStore.isValid);
+  if (isLoggedIn) {
+    console.log("refreshing");
+    client.users.refresh().catch((error) => {
+      console.log(error);
+      client.authStore.clear();
+      setIsLoggedIn(false);
+    });
+  }
   if (!isLoggedIn) {
     return <Auth client={client} setIsLoggedIn={setIsLoggedIn} />;
   }
