@@ -1,0 +1,17 @@
+dbs:
+  - path: /pb_data/data.db
+    replicas:
+      - type: s3
+        endpoint: ${R2_URL}
+        path: ${R2_DATA_PATH}
+        bucket: ${R2_BUCKET}
+        access-key-id: ${R2_ACCESS_KEY}
+        secret-access-key: ${R2_SECRET_KEY}
+  - path: /pb_data/logs.db
+    replicas:
+      - type: s3
+        endpoint: ${R2_URL}
+        path: ${R2_LOGS_PATH}
+        bucket: ${R2_BUCKET}
+        access-key-id: ${R2_ACCESS_KEY}
+        secret-access-key: ${R2_SECRET_KEY}
