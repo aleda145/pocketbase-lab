@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, NavLink } from "react-router-dom";
 import Number from "./Number";
 export default function Dashboard({ client, setIsLoggedIn }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [newNumber, setNewNumber] = useState(0);
 
   const addMutation = useMutation(
     (mutationData) => {
@@ -38,24 +39,34 @@ export default function Dashboard({ client, setIsLoggedIn }) {
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-  let favorite_numbers = [];
-  let favorite_ids = [];
   let number_list = [];
-  for (const item of data.items) {
+  data.items.forEach((item, index) => {
     number_list.push(
-      <Number number={item.num} numberId={item.id} client={client} />
+      <Number
+        key={index}
+        number={item.num}
+        numberId={item.id}
+        client={client}
+      />
     );
-  }
+  });
 
   return (
     <div>
       <button onClick={logOutClicked}>Log out</button>
 
       <div>My {client.AuthStore.model.email} favorite numbers</div>
+      <input
+        type="number"
+        id="number"
+        name="number"
+        onChange={(event) => setNewNumber(event.target.value)}
+        value={newNumber}
+      />
       <button
         onClick={() => {
           addMutation.mutate(
-            { number: 42 },
+            { number: newNumber },
             {
               onSuccess: () => {
                 console.log("button scucces");
@@ -67,11 +78,13 @@ export default function Dashboard({ client, setIsLoggedIn }) {
         Add number
       </button>
       <table>
-        <tr>
-          <th>number</th>
-          <th>Remove</th>
-        </tr>
-        {number_list}
+        <thead>
+          <tr>
+            <th>number</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody>{number_list}</tbody>
       </table>
     </div>
   );
