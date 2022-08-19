@@ -1,34 +1,17 @@
 import React, { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, NavLink } from "react-router-dom";
-
+import Number from "./Number";
 export default function Dashboard({ client, setIsLoggedIn }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const addMutation = useMutation(
-    (url) => {
+    (mutationData) => {
       return client.Records.create("user_nums", {
         user: client.AuthStore.model.id,
-        num: 42,
+        num: mutationData.number,
       });
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("favNumbers");
-        console.log("succes");
-      },
-      onError: (error) => {
-        console.log(error);
-        error.customError = error.response.data.message;
-      },
-    }
-  );
-  const removeMutation = useMutation(
-    (numId) => {
-      console.log(numId.numId);
-      console.log(typeof numId.numId);
-      return client.Records.delete("user_nums", numId.numId);
     },
     {
       onSuccess: () => {
@@ -57,21 +40,22 @@ export default function Dashboard({ client, setIsLoggedIn }) {
   if (error) return "An error has occurred: " + error.message;
   let favorite_numbers = [];
   let favorite_ids = [];
+  let number_list = [];
   for (const item of data.items) {
-    favorite_numbers.push(item.num + " ");
-    favorite_ids.push(item.id);
+    number_list.push(
+      <Number number={item.num} numberId={item.id} client={client} />
+    );
   }
 
   return (
     <div>
-      <div>My {client.AuthStore.model.email} favorite numbers</div>
-      <div>{favorite_ids}</div>
-      <div>{favorite_numbers}</div>
+      <button onClick={logOutClicked}>Log out</button>
 
+      <div>My {client.AuthStore.model.email} favorite numbers</div>
       <button
         onClick={() => {
           addMutation.mutate(
-            { url: "ok" },
+            { number: 42 },
             {
               onSuccess: () => {
                 console.log("button scucces");
@@ -80,24 +64,15 @@ export default function Dashboard({ client, setIsLoggedIn }) {
           );
         }}
       >
-        Lägg till nummer
+        Add number
       </button>
-      <button
-        onClick={() => {
-          removeMutation.mutate(
-            { numId: favorite_ids[0] },
-            {
-              onSuccess: () => {
-                console.log("button remove scucces");
-              },
-            }
-          );
-        }}
-      >
-        Delete number
-      </button>
-
-      <button onClick={logOutClicked}>Log out</button>
+      <table>
+        <tr>
+          <th>number</th>
+          <th>Remove</th>
+        </tr>
+        {number_list}
+      </table>
     </div>
   );
 }
