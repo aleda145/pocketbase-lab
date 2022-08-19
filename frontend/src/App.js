@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 import Auth from "./auth/pocketbase";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
-import Preferences from "./Preferences/Preferences";
 import PocketBase from "pocketbase";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -17,9 +15,12 @@ const queryClient = new QueryClient({
 export function getApiDomain() {
   return process.env.REACT_APP_API_URL;
 }
-
 function App() {
   const client = new PocketBase(getApiDomain());
+  async function logOutClicked() {
+    client.authStore.clear();
+    setIsLoggedIn(false);
+  }
   const [isLoggedIn, setIsLoggedIn] = useState(client.authStore.isValid);
   if (isLoggedIn) {
     console.log("refreshing");
@@ -30,35 +31,18 @@ function App() {
     });
   }
   if (!isLoggedIn) {
-    return <Auth client={client} setIsLoggedIn={setIsLoggedIn} />;
+    return (
+      <div className="App">
+        <Auth client={client} setIsLoggedIn={setIsLoggedIn} />
+      </div>
+    );
   }
   return (
-    <div className="wrapper">
+    <div className="App">
       <h1>Application</h1>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Link to="/">
-            <button>home</button>
-          </Link>
-          <Link to="/dashboard">
-            <button>dashboard</button>
-          </Link>
-          <Link to="/preferences">
-            <button>preferences</button>
-          </Link>
-
-          <Routes>
-            {/* <Route path="/" element={<App />} /> */}
-            <Route
-              path="dashboard"
-              element={
-                <Dashboard client={client} setIsLoggedIn={setIsLoggedIn} />
-              }
-            />
-            <Route path="preferences" element={<Preferences />} />
-            <Route path="/" element={<Preferences />} />
-          </Routes>
-        </BrowserRouter>
+        <button onClick={logOutClicked}>Log out</button>
+        <Dashboard client={client} />
       </QueryClientProvider>
     </div>
   );

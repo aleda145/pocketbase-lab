@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 export default function Auth({ client, setIsLoggedIn }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
@@ -64,7 +63,3 @@ export default function Auth({ client, setIsLoggedIn }) {
     </div>
   );
 }
-
-Auth.propTypes = {
-  client: PropTypes.any.isRequired,
-};

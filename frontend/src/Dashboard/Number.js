@@ -6,14 +6,12 @@ export default function Number({ number, numberId, client }) {
 
   const removeMutation = useMutation(
     (numId) => {
-      console.log(numId.numId);
-      console.log(typeof numId.numId);
       return client.Records.delete("user_nums", numId.numId);
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries("favNumbers");
-        console.log("succes");
+        console.log("Deletion Success!");
       },
       onError: (error) => {
         console.log(error);

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, NavLink } from "react-router-dom";
 import Number from "./Number";
-export default function Dashboard({ client, setIsLoggedIn }) {
-  const navigate = useNavigate();
+export default function Dashboard({ client }) {
   const queryClient = useQueryClient();
   const [newNumber, setNewNumber] = useState(0);
 
@@ -17,7 +15,7 @@ export default function Dashboard({ client, setIsLoggedIn }) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("favNumbers");
-        console.log("succes");
+        console.log("Adding Success!");
       },
       onError: (error) => {
         console.log(error);
@@ -25,11 +23,7 @@ export default function Dashboard({ client, setIsLoggedIn }) {
       },
     }
   );
-  async function logOutClicked() {
-    await client.AuthStore.clear();
-    setIsLoggedIn(false);
-    navigate("/");
-  }
+
   const { isLoading, error, data } = useQuery(["favNumbers"], () =>
     client.Records.getList("user_nums", 1, 50, {
       filter: "created >= '2022-01-01 00:00:00'",
@@ -53,8 +47,6 @@ export default function Dashboard({ client, setIsLoggedIn }) {
 
   return (
     <div>
-      <button onClick={logOutClicked}>Log out</button>
-
       <div>My {client.AuthStore.model.email} favorite numbers</div>
       <input
         type="number"
@@ -65,14 +57,7 @@ export default function Dashboard({ client, setIsLoggedIn }) {
       />
       <button
         onClick={() => {
-          addMutation.mutate(
-            { number: newNumber },
-            {
-              onSuccess: () => {
-                console.log("button scucces");
-              },
-            }
-          );
+          addMutation.mutate({ number: newNumber });
         }}
       >
         Add number
